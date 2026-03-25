@@ -5,7 +5,7 @@ from src.components.Button import Button
 class Tile(Subject, Button):
 
     def __init__(self, is_mine: bool, x_index: int, y_index: int):
-        Button.__init__(self, target_name=f"{x_index}-{y_index}",lefttop=(x_index*20,y_index*20), widthheight=(20,20))
+        Button.__init__(self, target_name=f"{x_index}-{y_index}",lefttop=(562+x_index*22,100+y_index*22), widthheight=(20,20))
         
         self.__x_index = x_index
         self.__y_index = y_index

@@ -93,12 +93,16 @@ class Game(State,Subject):
 
     def display(self):
         self._screen.blit(self.__background, (0, 0))
+
+        for x in range(len(self.__board)):
+            for y in range(len(self.__board[x])):
+                self._draw_button(self.__board[x][y])
+
         for button in self.__buttons:
                 self._draw_button(button)
 
         for current_event in event.get():
             for button in self.__buttons:
-                self._draw_button(button)
                 if button.rect.collidepoint(mouse.get_pos()):
                     if current_event.type == MOUSEBUTTONDOWN:
                         match button.get_target_name():
@@ -116,6 +120,16 @@ class Game(State,Subject):
                     button.hovered()
                 else:
                     button.avoided()
+                    
+            for x in range(len(self.__board)):
+                for y in range(len(self.__board[x])):
+                    if self.__board[x][y].rect.collidepoint(mouse.get_pos()):
+                        if current_event.type == MOUSEBUTTONDOWN:
+                            res = self.reveal_tiles((x, y))
+                            print(res)
+                        self.__board[x][y].hovered()
+                    else:
+                        self.__board[x][y].avoided()
             if current_event.type == QUIT:
                 return False
         display.update()
