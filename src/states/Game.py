@@ -1,12 +1,18 @@
 from src.states.State import State, Observer
 from src.interfaces.Subject import Subject
-from src.components.Tile import Tile
+from src.components.Tile import Tile, Button
+from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display
 
 class Game(State,Subject):
 
     def __init__(self):
         self.__observers: list[Observer] = []
         self.__init_board()
+        self.__background = Surface((1300, 731))
+        self.__background.fill(Color("#5B5B5BFF"))
+        self.__buttons: list[Button] = [Button("Win",(500,444),(300,60),text = "Win"),
+                                        Button("Lose",(500,524),(300,60),text = "Lose"),
+                                        Button("Quit",(500,604),(300,60),text = "Quit")]
 
     def __init_board(self):
         self.__board: list[list[Tile]] = [
@@ -64,4 +70,28 @@ class Game(State,Subject):
         pass
 
     def display(self):
-        pass
+        
+        self._screen.blit(self.__background, (0, 0))
+        for button in self.__buttons:
+                self._draw_button(button)
+        for current_event in event.get():
+            for button in self.__buttons:
+                self._draw_button(button)
+                if button.rect.collidepoint(mouse.get_pos()):
+                    if current_event.type == MOUSEBUTTONDOWN:
+                        match button.get_target_name():
+                            case "Win":
+                                self._context.set_state("GameWon")
+                                return self._context.display()
+                            case "Lose":
+                                self._context.set_state("GameLost")
+                                return self._context.display()
+                            case "Quit":
+                                return False
+                    button.hovered()
+                else:
+                    button.avoided()
+            if current_event.type == QUIT:
+                return False
+        display.update()
+        return True
