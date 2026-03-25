@@ -20,7 +20,6 @@ class State(Observer):
         self._fonts: tuple[font.Font] = context.get_fonts()
 
     def _draw_button(self, button: Button):
-
         if button.get_bg_image() != None and button.get_hover_bg_image() != None:
             surface = button.current_bg_image
 

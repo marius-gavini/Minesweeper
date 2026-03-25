@@ -14,7 +14,7 @@ class Tile(Subject, Button):
         self.__is_mine: bool = is_mine
         self.tile_state: int = -1
     
-    def check_tile_value(self, board: list[list[Tile]], coordinate: tuple):
+    def check_tile_value(self, board, coordinate: tuple):
         
         y, x = coordinate
         targeted_tile: Tile = board[y][x]

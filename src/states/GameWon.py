@@ -32,6 +32,7 @@ class GameWon(State,Subject):
         self._screen.blit(self.__background, (0, 0))
         for button in self.__buttons:
                 self._draw_button(button)
+                
         for current_event in event.get():
             for button in self.__buttons:
                 self._draw_button(button)
