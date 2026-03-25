@@ -1,12 +1,15 @@
 from src.states.State import State, Observer
 from src.interfaces.Subject import Subject
 from src.components.Tile import Tile
-
+from random import randint
 class Game(State,Subject):
 
     def __init__(self):
         self.__observers: list[Observer] = []
         self.__init_board()
+        self.is_first_click = True
+        self.difficulty = "easy"
+        self.bombs = None
 
     def __init_board(self):
         self.__board: list[list[Tile]] = [
@@ -46,6 +49,25 @@ class Game(State,Subject):
                             return
             else: 
                 return 
+            
+    def place_random_bombs(self, coordinate):
+        self.is_first_click = False
+        y, x = coordinate
+        i = 0
+
+        while i < self.bombs:
+            ry = randint(len(self.__board))
+            rx = randint(len(self.__board[0]))
+
+            if (ry, rx) == (y, x):
+                continue
+
+            elif self.__board[ry][rx].mine :
+                continue
+
+            else:   
+                i += 1
+                self.__board[ry][rx].mine == True
 
     def add_observer(self, observer: Observer):
         self.__observers.append(observer)
