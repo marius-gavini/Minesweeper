@@ -28,9 +28,6 @@ class Tile(Subject, Button):
         for observer in self.__observers:
             observer.update()
 
-    def check_tile_value(self):
-        pass
-
     def __set_tile_state(self):
         pass
 
