@@ -21,33 +21,31 @@ class Game(State,Subject):
             [Tile(True, 8, 0), Tile(False, 8, 1), Tile(False, 8, 2), Tile(False, 8, 3), Tile(True, 8, 4), Tile(False, 8, 5), Tile(False, 8, 6), Tile(False, 8, 7), Tile(False, 8, 8)]
         ]
 
-    def __check_tile_value(self, coordinate: tuple):
+    def reveal_tiles(self, coordinate: tuple):
         y, x = coordinate
-        targeted_tile: Tile = self.__board[y][x]
-
-        if targeted_tile.get_is_mine() == True:
-            targeted_tile.tile_state = -2
-            return 
-            
-        mine_number = 0
         height = len(self.__board)
         width = len(self.__board[0])
 
-        for dy in range(-1, 2):
-            for dx in range(-1, 2):
-                if dy == 0 and dx == 0:
-                    continue
+        if 0 <= y < height and 0 <= x < width:
+            targeted_tile: Tile = self.__board[y][x]
+            if targeted_tile.tile_state == -1:
+                targeted_tile.check_tile_value(self.__board, (y, x))
+                targeted_tile.reveal()
 
-                ny, nx = y + dy, x + dx
+                for dy in range(-1, 2):
+                    for dx in range(-1, 2):
+                        if targeted_tile.tile_state == 0:
+                                if dy == 0 and dx == 0:
+                                    continue
+                    
+                                ny, nx = y + dy, x + dx
+                                if 0 <= ny < height and 0 <= nx < width:
+                                    self.reveal_tiles((ny, nx))
 
-                if 0 <= ny < height and 0 <= nx < width:
-                    if self.__board[ny][nx].get_is_mine():
-                        mine_number += 1
-
-        targeted_tile.tile_state = mine_number
-
-    def __reveal_tiles(self):
-        pass
+                        else:
+                            return
+            else: 
+                return 
 
     def add_observer(self, observer: Observer):
         self.__observers.append(observer)
@@ -64,4 +62,10 @@ class Game(State,Subject):
         pass
 
     def display(self):
-        pass
+        game = Game()
+
+        res = game.reveal_tiles((0, 1))
+
+        print(res)
+
+
