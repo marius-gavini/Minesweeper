@@ -2,15 +2,19 @@ from src.states.State import State, Observer
 from src.interfaces.Subject import Subject
 from src.components.Tile import Tile, Button
 from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display
-
+from random import randint
 class Game(State,Subject):
 
     def __init__(self):
         self.__observers: list[Observer] = []
         self.__init_board()
+        self.is_first_click = True
+        self.difficulty = "easy"
+        self.bombs = None
         self.__background = Surface((1300, 731))
         self.__background.fill(Color("#5B5B5BFF"))
-        self.__buttons: list[Button] = [Button("Win",(500,444),(300,60),text = "Win"),
+        self.__buttons: list[Button] = [Button("Reveal",(500,444),(300,60),text = "Reveal 0,1 tile"),
+                                        Button("Win",(500,444),(300,60),text = "Win"),
                                         Button("Lose",(500,524),(300,60),text = "Lose"),
                                         Button("Quit",(500,604),(300,60),text = "Quit")]
 
@@ -27,33 +31,50 @@ class Game(State,Subject):
             [Tile(True, 8, 0), Tile(False, 8, 1), Tile(False, 8, 2), Tile(False, 8, 3), Tile(True, 8, 4), Tile(False, 8, 5), Tile(False, 8, 6), Tile(False, 8, 7), Tile(False, 8, 8)]
         ]
 
-    def __check_tile_value(self, coordinate: tuple):
+    def reveal_tiles(self, coordinate: tuple):
         y, x = coordinate
-        targeted_tile: Tile = self.__board[y][x]
-
-        if targeted_tile.get_is_mine() == True:
-            targeted_tile.tile_state = -2
-            return 
-            
-        mine_number = 0
         height = len(self.__board)
         width = len(self.__board[0])
 
-        for dy in range(-1, 2):
-            for dx in range(-1, 2):
-                if dy == 0 and dx == 0:
-                    continue
+        if 0 <= y < height and 0 <= x < width:
+            targeted_tile: Tile = self.__board[y][x]
+            if targeted_tile.tile_state == -1:
+                targeted_tile.check_tile_value(self.__board, (y, x))
+                targeted_tile.reveal()
 
-                ny, nx = y + dy, x + dx
+                for dy in range(-1, 2):
+                    for dx in range(-1, 2):
+                        if targeted_tile.tile_state == 0:
+                                if dy == 0 and dx == 0:
+                                    continue
+                    
+                                ny, nx = y + dy, x + dx
+                                if 0 <= ny < height and 0 <= nx < width:
+                                    self.reveal_tiles((ny, nx))
 
-                if 0 <= ny < height and 0 <= nx < width:
-                    if self.__board[ny][nx].get_is_mine():
-                        mine_number += 1
+                        else:
+                            return
+            else: 
+                return 
+            
+    def place_random_bombs(self, coordinate):
+        self.is_first_click = False
+        y, x = coordinate
+        i = 0
 
-        targeted_tile.tile_state = mine_number
+        while i < self.bombs:
+            ry = randint(len(self.__board))
+            rx = randint(len(self.__board[0]))
 
-    def __reveal_tiles(self):
-        pass
+            if (ry, rx) == (y, x):
+                continue
+
+            elif self.__board[ry][rx].mine :
+                continue
+
+            else:   
+                i += 1
+                self.__board[ry][rx].mine == True
 
     def add_observer(self, observer: Observer):
         self.__observers.append(observer)
@@ -80,6 +101,9 @@ class Game(State,Subject):
                 if button.rect.collidepoint(mouse.get_pos()):
                     if current_event.type == MOUSEBUTTONDOWN:
                         match button.get_target_name():
+                            case "Reveal":
+                                res = self.reveal_tiles((0, 1))
+                                print(res)
                             case "Win":
                                 self._context.set_state("GameWon")
                                 return self._context.display()
