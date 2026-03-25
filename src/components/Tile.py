@@ -13,6 +13,35 @@ class Tile(Subject, Button):
         self.__observers: list[Observer] = []
         self.__is_mine: bool = is_mine
         self.tile_state: int = -1
+    
+    def check_tile_value(self, board: list[list[Tile]], coordinate: tuple):
+        
+        y, x = coordinate
+        targeted_tile: Tile = board[y][x]
+
+        if targeted_tile.get_is_mine() == True:
+            targeted_tile.tile_state = -2
+            return 
+            
+        mine_number = 0
+        height = len(board)
+        width = len(board[0])
+
+        for dy in range(-1, 2):
+            for dx in range(-1, 2):
+                if dy == 0 and dx == 0:
+                    continue
+
+                ny, nx = y + dy, x + dx
+            
+                if 0 <= ny < height and 0 <= nx < width:
+                    if board[ny][nx].get_is_mine():
+                        mine_number += 1
+
+        targeted_tile.tile_state = mine_number
+
+    def reveal(self):
+        pass
 
     def get_is_mine(self):
         self.__is_mine
@@ -28,6 +57,12 @@ class Tile(Subject, Button):
         for observer in self.__observers:
             observer.update()
 
+    def get_y_index(self):
+        return self.__y_index
+    
+    def get_x_index(self):
+        return self.__x_index
+    
     def __set_tile_state(self):
         pass
 
