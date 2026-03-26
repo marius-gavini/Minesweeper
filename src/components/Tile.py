@@ -42,10 +42,13 @@ class Tile(Subject, Button):
 
     def reveal(self):
         pass
-
+    
     def get_is_mine(self):
         return self.__is_mine
 
+    def set_is_mine(self, is_mine):
+        self.__is_mine = is_mine
+    
     def add_observer(self, observer: Observer):
         self.__observers.append(observer)
 

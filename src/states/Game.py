@@ -9,7 +9,7 @@ class Game(State,Observer):
     def __init__(self, difficulty: str):
         self.__difficulty = difficulty
         self.is_first_click = True
-        self.__bombs_count = None
+        self.__bombs_count = 10
         self.__init_board()
         self.__background = Surface((1300, 731))
         self.__background.fill(Color("#5B5B5BFF"))
@@ -75,6 +75,42 @@ class Game(State,Observer):
                             return
             else: 
                 return 
+            
+    def on_click(self, coordinate):
+        if self.is_first_click:
+            self.place_random_bombs(coordinate)
+
+        self.__reveal_tiles(coordinate)
+        self.on_board_complete()
+
+    def check_board(self):
+
+        check = "GameInProgress"
+
+        for x in range(len(self.__board)):
+            for y in range(len(self.__board[x])):
+                if self.__board[x][y].tile_state == -2:
+                    check = "GameLost"
+                    break
+                elif self.__board[x][y].tile_state != -1 or (self.__board[x][y].tile_state == -1 and self.__board[x][y].get_is_mine() == True):
+                    check = "GameWin"
+
+                else:
+                    check= "GameInProgress"
+                    break
+
+        return check
+    
+    def on_board_complete(self):
+        check = self.check_board()
+
+        if check == "GameWin":
+            self._context.set_state("GameWon")
+            return self._context.display()
+        
+        elif check == "GameLost":
+            self._context.set_state("GameLost")
+            return self._context.display()
     
     def place_random_bombs(self, coordinate):
         self.is_first_click = False
@@ -82,8 +118,8 @@ class Game(State,Observer):
         i = 0
 
         while i < self.__bombs_count:
-            ry = randint(len(self.__board))
-            rx = randint(len(self.__board[0]))
+            ry = randint(0, (len(self.__board) - 1))
+            rx = randint(0, (len(self.__board[0]) - 1))
 
             if (ry, rx) == (y, x):
                 continue
@@ -93,7 +129,7 @@ class Game(State,Observer):
 
             else:   
                 i += 1
-                self.__board[ry][rx].get_is_mine() == True
+                self.__board[ry][rx].set_is_mine(True)
 
     def update(self, element = None):
         pass
@@ -132,8 +168,7 @@ class Game(State,Observer):
                 for y in range(len(self.__board[x])):
                     if self.__board[x][y].rect.collidepoint(mouse.get_pos()):
                         if current_event.type == MOUSEBUTTONDOWN:
-                            res = self.__reveal_tiles((x, y))
-                            print(self.__board[x][y].tile_state)
+                            self.on_click((x, y))
                         self.__board[x][y].hovered()
                     else:
                         self.__board[x][y].avoided()
