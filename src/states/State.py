@@ -1,9 +1,8 @@
 from abc import abstractmethod
-from src.interfaces.Observer import Observer
 from src.components.Button import Button
 from pygame import Surface, time, font
 
-class State(Observer):
+class State:
 
     _context = None
     _screen = None
@@ -32,11 +31,7 @@ class State(Observer):
             surface.blit(text_surf, text_surf.get_rect(center = surface.get_rect().center))
 
         self._screen.blit(surface, button.lefttop)
-
-    @abstractmethod
-    def update(self, element = None):
-        pass
-
+        
     @abstractmethod
     def display(self):
         pass

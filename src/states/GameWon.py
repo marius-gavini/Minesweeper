@@ -1,32 +1,15 @@
-from src.states.State import State, Observer
-from src.interfaces.Subject import Subject
+from src.states.State import State
 from src.components.Button import Button
 from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display
 
-class GameWon(State,Subject):
+class GameWon(State):
 
     def __init__(self):
-        self.__observers: list[Observer] = []
         self.__background = Surface((1300, 731))
         self.__background.fill(Color("#006F4CFF"))
         self.__buttons: list[Button] = [Button("PlayAgain",(500,444),(300,60),text = "Play again"),
                                  Button("Menu",(500,524),(300,60),text = "Menu"),
                                  Button("Quit",(500,604),(300,60),text = "Quit")]
-
-    def add_observer(self, observer: Observer):
-        self.__observers.append(observer)
-
-    def remove_observer(self, observer: Observer):
-        for observer in self.__observers:
-            self.__observers.remove(observer)
-
-    def notify_observers(self):
-        for observer in self.__observers:
-            observer.update()
-
-
-    def update(self, element = None):
-        pass
 
     def display(self):
         self._screen.blit(self.__background, (0, 0))

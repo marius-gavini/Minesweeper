@@ -1,13 +1,12 @@
-from src.states.State import State, Observer
-from src.interfaces.Subject import Subject
+from src.states.State import State
+from src.interfaces.Observer import Observer
 from src.components.Tile import Tile, Button
 from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display
 from random import randint
 
-class Game(State,Subject):
+class Game(State,Observer):
 
     def __init__(self):
-        self.__observers: list[Observer] = []
         self.__init_board()
         self.is_first_click = True
         self.difficulty = "easy"
@@ -76,17 +75,6 @@ class Game(State,Subject):
             else:   
                 i += 1
                 self.__board[ry][rx].mine == True
-
-    def add_observer(self, observer: Observer):
-        self.__observers.append(observer)
-
-    def remove_observer(self, observer: Observer):
-        for observer in self.__observers:
-            self.__observers.remove(observer)
-
-    def notify_observers(self):
-        for observer in self.__observers:
-            observer.update()
 
     def update(self, element = None):
         pass
