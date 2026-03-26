@@ -61,6 +61,9 @@ class Game(State,Observer):
                 targeted_tile.check_tile_value(self.__board, (y, x))
                 targeted_tile.reveal()
 
+                if targeted_tile.tile_state == -2:
+                        return "GameLost"
+        
                 for dy in range(-1, 2):
                     for dx in range(-1, 2):
                         if targeted_tile.tile_state == 0:
@@ -81,7 +84,7 @@ class Game(State,Observer):
             self.place_random_bombs(coordinate)
 
         self.__reveal_tiles(coordinate)
-        self.on_board_complete()
+        self.check_board()
 
     def check_board(self):
 
@@ -89,26 +92,19 @@ class Game(State,Observer):
 
         for x in range(len(self.__board)):
             for y in range(len(self.__board[x])):
-                if self.__board[x][y].tile_state == -2:
-                    check = "GameLost"
-                    break
-                elif self.__board[x][y].tile_state != -1 or (self.__board[x][y].tile_state == -1 and self.__board[x][y].get_is_mine() == True):
+                
+                if self.__board[x][y].tile_state != -1 or (self.__board[x][y].tile_state == -1 and self.__board[x][y].get_is_mine() == True):
                     check = "GameWin"
 
                 else:
                     check= "GameInProgress"
                     break
 
-        return check
+        if check == "GameWin":
+            self.on_board_complete()
     
     def on_board_complete(self):
-        check = self.check_board()
-
-        if check == "GameWin":
-            self._context.set_state("GameWon")
-        
-        elif check == "GameLost":
-            self._context.set_state("GameLost")
+        self._context.set_state("GameWon")
     
     def place_random_bombs(self, coordinate):
         self.is_first_click = False
