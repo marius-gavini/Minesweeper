@@ -44,7 +44,7 @@ class Tile(Subject, Button):
         pass
 
     def get_is_mine(self):
-        self.__is_mine
+        return self.__is_mine
 
     def add_observer(self, observer: Observer):
         self.__observers.append(observer)
@@ -62,7 +62,7 @@ class Tile(Subject, Button):
     
     def get_x_index(self):
         return self.__x_index
-    
+
     def __set_tile_state(self):
         pass
 

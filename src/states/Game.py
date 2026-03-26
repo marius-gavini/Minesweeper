@@ -9,29 +9,52 @@ class Game(State,Observer):
     def __init__(self, difficulty: str):
         self.__difficulty = difficulty
         self.__init_board()
+        self.__observers: list[Observer] = []
         self.is_first_click = True
+
+        self.difficulty = "easy"
         self.__bombs_count = None
+        self.__init_board()
         self.__background = Surface((1300, 731))
         self.__background.fill(Color("#5B5B5BFF"))
         self.__buttons: list[Button] = [Button("Reveal",(500,344),(300,60),text = "Reveal 0,1 tile"),
                                         Button("Win",(500,444),(300,60),text = "Win"),
                                         Button("Lose",(500,524),(300,60),text = "Lose"),
                                         Button("Quit",(500,604),(300,60),text = "Quit")]
+        
 
     def __init_board(self):
-        self.__board: list[list[Tile]] = [
-            [Tile(False, 0, 0), Tile(False, 0, 1), Tile(False, 0, 2), Tile(False, 0, 3), Tile(False, 0, 4), Tile(False, 0, 5), Tile(False, 0, 6), Tile(True, 0, 7), Tile(False, 0, 8)],
-            [Tile(False, 1, 0), Tile(False, 1, 1), Tile(False, 1, 2), Tile(False, 1, 3), Tile(False, 1, 4), Tile(False, 1, 5), Tile(True, 1, 6), Tile(False, 1, 7), Tile(False, 1, 8)],
-            [Tile(False, 2, 0), Tile(False, 2, 1), Tile(False, 2, 2), Tile(False, 2, 3), Tile(False, 2, 4), Tile(False, 2, 5), Tile(False, 2, 6), Tile(False, 2, 7), Tile(False, 2, 8)],
-            [Tile(False, 3, 0), Tile(True, 3, 1), Tile(True, 3, 2), Tile(False, 3, 3), Tile(False, 3, 4), Tile(False, 3, 5), Tile(False, 3, 6), Tile(False, 3, 7), Tile(False, 3, 8)],
-            [Tile(True, 4, 0), Tile(False, 4, 1), Tile(False, 4, 2), Tile(False, 4, 3), Tile(False, 4, 4), Tile(False, 4, 5), Tile(False, 4, 6), Tile(False, 4, 7), Tile(False, 4, 8)],
-            [Tile(False, 5, 0), Tile(False, 5, 1), Tile(False, 5, 2), Tile(False, 5, 3), Tile(False, 5, 4), Tile(True, 5, 5), Tile(False, 5, 6), Tile(False, 5, 7), Tile(False, 5, 8)],
-            [Tile(False, 6, 0), Tile(False, 6, 1), Tile(False, 6, 2), Tile(False, 6, 3), Tile(False, 6, 4), Tile(False, 6, 5), Tile(True, 6, 6), Tile(False, 6, 7), Tile(False, 6, 8)],
-            [Tile(False, 7, 0), Tile(False, 7, 1), Tile(False, 7, 2), Tile(False, 7, 3), Tile(False, 7, 4), Tile(False, 7, 5), Tile(False, 7, 6), Tile(False, 7, 7), Tile(True, 7, 8)],
-            [Tile(True, 8, 0), Tile(False, 8, 1), Tile(False, 8, 2), Tile(False, 8, 3), Tile(True, 8, 4), Tile(False, 8, 5), Tile(False, 8, 6), Tile(False, 8, 7), Tile(False, 8, 8)]
-        ]
+        match self.__difficulty:
+            case "easy": 
+                self.__board = []
+                rows = 9
+                columns = 9
+                for r in range (0,rows,1):
+                    self.__board.append([])
+                    for c in range (0,columns,1):
+                        self.__board[r].append(Tile(False, r, c))
 
-    def reveal_tiles(self, coordinate: tuple):
+            case "medium":
+                self.__board = []
+                rows = 16
+                columns = 16
+                for r in range (0,rows,1):
+                    self.__board.append([])
+                    for c in range (0,columns,1):
+                        self.__board[r].append(Tile(False, r, c))
+
+            case "hard":
+                self.__board = []
+                rows = 32
+                columns = 16
+                for r in range (0,rows,1):
+                    self.__board.append([])
+                    for c in range (0,columns,1):
+                        self.__board[r].append(Tile(False, r, c))
+            case _:
+                print("error")
+
+    def __reveal_tiles(self, coordinate: tuple):
         y, x = coordinate
         height = len(self.__board)
         width = len(self.__board[0])
@@ -50,13 +73,13 @@ class Game(State,Observer):
                     
                                 ny, nx = y + dy, x + dx
                                 if 0 <= ny < height and 0 <= nx < width:
-                                    self.reveal_tiles((ny, nx))
+                                    self.__reveal_tiles((ny, nx))
 
                         else:
                             return
             else: 
                 return 
-            
+    
     def place_random_bombs(self, coordinate):
         self.is_first_click = False
         y, x = coordinate
@@ -69,12 +92,12 @@ class Game(State,Observer):
             if (ry, rx) == (y, x):
                 continue
 
-            elif self.__board[ry][rx].mine :
+            elif self.__board[ry][rx].get_is_mine() :
                 continue
 
             else:   
                 i += 1
-                self.__board[ry][rx].mine == True
+                self.__board[ry][rx].get_is_mine() == True
 
     def update(self, element = None):
         pass
@@ -96,7 +119,7 @@ class Game(State,Observer):
                     if current_event.type == MOUSEBUTTONDOWN:
                         match button.get_target_name():
                             case "Reveal":
-                                res = self.reveal_tiles((0, 1))
+                                res = self.__reveal_tiles((0, 1))
                                 print(res)
                             case "Win":
                                 self._context.set_state("GameWon")
@@ -114,8 +137,8 @@ class Game(State,Observer):
                 for y in range(len(self.__board[x])):
                     if self.__board[x][y].rect.collidepoint(mouse.get_pos()):
                         if current_event.type == MOUSEBUTTONDOWN:
-                            res = self.reveal_tiles((x, y))
-                            print(res)
+                            res = self.__reveal_tiles((x, y))
+                            print(self.__board[x][y].tile_state)
                         self.__board[x][y].hovered()
                     else:
                         self.__board[x][y].avoided()
