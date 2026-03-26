@@ -24,10 +24,8 @@ class GameWon(State):
                         match button.get_target_name():
                             case "PlayAgain":
                                 self._context.set_state("Game")
-                                return self._context.display()
                             case "Menu":
                                 self._context.set_state("Menu")
-                                return True
                             case "Quit":
                                 return False
                     button.hovered()

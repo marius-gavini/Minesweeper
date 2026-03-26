@@ -30,8 +30,7 @@ class Menu(State):
                         if current_event.type == MOUSEBUTTONDOWN:
                             match button.get_target_name():
                                 case "Play":
-                                    self._context.set_state("Game")
-                                    return self._context.display()
+                                    self._context.set_state("Game")                             
                                 case "Difficulty":
                                     self.__difficulty_index += 1
                                     if self.__difficulty_index > 3:

@@ -106,11 +106,9 @@ class Game(State,Observer):
 
         if check == "GameWin":
             self._context.set_state("GameWon")
-            return self._context.display()
         
         elif check == "GameLost":
             self._context.set_state("GameLost")
-            return self._context.display()
     
     def place_random_bombs(self, coordinate):
         self.is_first_click = False
@@ -141,29 +139,7 @@ class Game(State,Observer):
             for y in range(len(self.__board[x])):
                 self._draw_button(self.__board[x][y])
 
-        for button in self.__buttons:
-                self._draw_button(button)
-
         for current_event in event.get():
-            for button in self.__buttons:
-                if button.rect.collidepoint(mouse.get_pos()):
-                    if current_event.type == MOUSEBUTTONDOWN:
-                        match button.get_target_name():
-                            case "Reveal":
-                                res = self.__reveal_tiles((0, 1))
-                                print(res)
-                            case "Win":
-                                self._context.set_state("GameWon")
-                                return self._context.display()
-                            case "Lose":
-                                self._context.set_state("GameLost")
-                                return self._context.display()
-                            case "Quit":
-                                return False
-                    button.hovered()
-                else:
-                    button.avoided()
-                    
             for x in range(len(self.__board)):
                 for y in range(len(self.__board[x])):
                     if self.__board[x][y].rect.collidepoint(mouse.get_pos()):
