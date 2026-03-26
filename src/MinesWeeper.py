@@ -9,7 +9,7 @@ import pygame
 class MinesWeeper:
     __state = None
 
-    def __init__(self, state: State) -> None:
+    def __init__(self, state: str) -> None:
         
         pygame.init()
         pygame.display.set_caption('MineSweeper')
@@ -18,6 +18,8 @@ class MinesWeeper:
         self.__clock = pygame.time.Clock()
         self.__fonts = pygame.font.Font(FONT_PATH, 30), pygame.font.Font(FONT_PATH, 50), pygame.font.Font(FONT_PATH, 20)
         
+        self.difficulty = "Medium"
+
         self.set_state(state)     
 
     def get_screen(self):
@@ -34,14 +36,13 @@ class MinesWeeper:
             case "Menu":
                 self.__state = Menu()
             case "Game":
-                self.__state = Game()
+                self.__state = Game(self.difficulty)
             case "GameWon":
                 self.__state = GameWon()
             case "GameLost":
                 self.__state = GameLost()
             case _:
                 self.__state = Menu()
-
         self.__state.set_context(self)
 
     def display(self):

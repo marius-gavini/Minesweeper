@@ -6,11 +6,11 @@ from random import randint
 
 class Game(State,Observer):
 
-    def __init__(self):
+    def __init__(self, difficulty: str):
+        self.__difficulty = difficulty
         self.__init_board()
         self.is_first_click = True
-        self.difficulty = "easy"
-        self.bombs = None
+        self.__bombs_count = None
         self.__background = Surface((1300, 731))
         self.__background.fill(Color("#5B5B5BFF"))
         self.__buttons: list[Button] = [Button("Reveal",(500,344),(300,60),text = "Reveal 0,1 tile"),
@@ -62,7 +62,7 @@ class Game(State,Observer):
         y, x = coordinate
         i = 0
 
-        while i < self.bombs:
+        while i < self.__bombs_count:
             ry = randint(len(self.__board))
             rx = randint(len(self.__board[0]))
 
@@ -80,6 +80,7 @@ class Game(State,Observer):
         pass
 
     def display(self):
+
         self._screen.blit(self.__background, (0, 0))
 
         for x in range(len(self.__board)):
