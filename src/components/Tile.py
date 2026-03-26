@@ -5,7 +5,7 @@ from src.components.Button import Button
 class Tile(Subject, Button):
 
     def __init__(self, is_mine: bool, x_index: int, y_index: int):
-        Button.__init__(self, target_name=f"{x_index}-{y_index}",lefttop=(562+x_index*22,100+y_index*22), widthheight=(20,20))
+        Button.__init__(self, target_name=f"{x_index}-{y_index}",lefttop=(262+x_index*32,100+y_index*32), widthheight=(30,30))
         
         self.__x_index = x_index
         self.__y_index = y_index
@@ -15,7 +15,6 @@ class Tile(Subject, Button):
         self.tile_state: int = -1
     
     def check_tile_value(self, board, coordinate: tuple):
-        
         y, x = coordinate
         targeted_tile: Tile = board[y][x]
 
@@ -41,8 +40,8 @@ class Tile(Subject, Button):
         targeted_tile.tile_state = mine_number
 
     def reveal(self):
-        pass
-    
+        self.text = str(self.tile_state)
+
     def get_is_mine(self):
         return self.__is_mine
 
