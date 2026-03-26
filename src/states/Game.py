@@ -8,11 +8,7 @@ class Game(State,Observer):
 
     def __init__(self, difficulty: str):
         self.__difficulty = difficulty
-        self.__init_board()
-        self.__observers: list[Observer] = []
         self.is_first_click = True
-
-        self.difficulty = "easy"
         self.__bombs_count = None
         self.__init_board()
         self.__background = Surface((1300, 731))
@@ -25,7 +21,7 @@ class Game(State,Observer):
 
     def __init_board(self):
         match self.__difficulty:
-            case "easy": 
+            case "Easy": 
                 self.__board = []
                 rows = 9
                 columns = 9
@@ -34,7 +30,7 @@ class Game(State,Observer):
                     for c in range (0,columns,1):
                         self.__board[r].append(Tile(False, r, c))
 
-            case "medium":
+            case "Medium":
                 self.__board = []
                 rows = 16
                 columns = 16
@@ -43,7 +39,7 @@ class Game(State,Observer):
                     for c in range (0,columns,1):
                         self.__board[r].append(Tile(False, r, c))
 
-            case "hard":
+            case "Hard":
                 self.__board = []
                 rows = 32
                 columns = 16
@@ -103,7 +99,6 @@ class Game(State,Observer):
         pass
 
     def display(self):
-
         self._screen.blit(self.__background, (0, 0))
 
         for x in range(len(self.__board)):
