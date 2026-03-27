@@ -19,8 +19,11 @@ class Tile(Subject, Button):
     
     def switch_tag(self):
         self.__tags_index += 1
-        if self.__tags_index > 2:
+        if self.__tags_index != 0:
+            self.tile_state = -3
+        elif self.__tags_index > 2:
             self.__tags_index = 0
+            self.tile_state = -1
         self.text = str(self.__tags[self.__tags_index])
 
     def check_tile_value(self, board, coordinate: tuple):
