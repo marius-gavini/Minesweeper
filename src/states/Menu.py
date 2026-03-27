@@ -30,6 +30,8 @@ class Menu(State):
 
     def display(self):
             self._screen.blit(self.__background, (0, 0))
+            title = self._fonts[1].render('Mine Sweeper', False, (255, 255, 255))
+            self._screen.blit(title, (490,200))
             for button in self.__buttons:
                     self._draw_button(button)
                     

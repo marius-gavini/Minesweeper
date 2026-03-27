@@ -10,7 +10,7 @@ import pygame
 class MinesWeeper:
     __state = None
 
-    def __init__(self, state: str) -> None:
+    def __init__(self, state: EnumState) -> None:
         
         pygame.init()
         pygame.display.set_caption('MineSweeper')
