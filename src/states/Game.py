@@ -2,12 +2,13 @@ from src.states.EnumState import EnumState
 from src.states.State import State
 from src.interfaces.Observer import Observer
 from src.components.Tile import Tile, Button
+from src.Difficulty import Difficulty
 from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display,time,font
 from random import randint
 
 class Game(State,Observer):
 
-    def __init__(self, difficulty: str):
+    def __init__(self, difficulty: Difficulty):
         self.__difficulty = difficulty
         self.__is_first_click = True
         self.__bombs_count = 10
@@ -20,7 +21,7 @@ class Game(State,Observer):
 
     def __init_board(self):
         match self.__difficulty:
-            case "Easy": 
+            case Difficulty.EASY: 
                 self.__board = []
                 rows = 9
                 columns = 9
@@ -30,7 +31,7 @@ class Game(State,Observer):
                     for c in range (0,columns,1):
                         self.__board[r].append(Tile(False, r, c))
 
-            case "Medium":
+            case Difficulty.MEDIUM:
                 self.__board = []
                 rows = 16
                 columns = 16
@@ -40,7 +41,7 @@ class Game(State,Observer):
                     for c in range (0,columns,1):
                         self.__board[r].append(Tile(False, r, c))
 
-            case "Hard":
+            case Difficulty.HARD:
                 self.__board = []
                 rows = 32
                 columns = 16
