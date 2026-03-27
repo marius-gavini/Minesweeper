@@ -14,7 +14,7 @@ class Tile(Subject, Button):
         self.__is_mine: bool = is_mine
         self.tile_state: int = -1
 
-        self.__tags = [" ","!","?"]
+        self.__tags = ["","!","?"]
         self.__tags_index = 0
     
     def switch_tag(self):

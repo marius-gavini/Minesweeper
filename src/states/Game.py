@@ -83,12 +83,20 @@ class Game(State,Observer):
             else: 
                 return 
             
-    def on_click(self, coordinate):
-        if self.is_first_click:
-            self.place_random_bombs(coordinate)
+    def on_click(self, coordinate, event):
+        x, y = coordinate
+        if event.button == 1 and self.__board[x][y].text == "":
+            if self.is_first_click:
+                self.place_random_bombs(coordinate)
 
-        self.__reveal_tiles(coordinate)
-        self.check_board()
+            self.__reveal_tiles(coordinate)
+            self.check_board()
+
+        elif event.button == 3:
+            if self.__board[x][y].tile_state != -1:
+                return
+            else: 
+                self.__board[x][y].switch_tag()
 
     def check_board(self):
         check = "GameInProgress"
@@ -152,7 +160,7 @@ class Game(State,Observer):
                 for y in range(len(self.__board[x])):
                     if self.__board[x][y].rect.collidepoint(mouse.get_pos()):
                         if current_event.type == MOUSEBUTTONDOWN:
-                            self.on_click((x, y))
+                            self.on_click((x, y), current_event)
                         self.__board[x][y].hovered()
                     else:
                         self.__board[x][y].avoided()
