@@ -25,6 +25,7 @@ class Game(State,Observer):
                 self.__board = []
                 rows = 9
                 columns = 9
+                self.__bombs_count = 10
                 for r in range (0,rows,1):
                     self.__board.append([])
                     for c in range (0,columns,1):
@@ -34,6 +35,7 @@ class Game(State,Observer):
                 self.__board = []
                 rows = 16
                 columns = 16
+                self.__bombs_count = 30
                 for r in range (0,rows,1):
                     self.__board.append([])
                     for c in range (0,columns,1):
@@ -43,6 +45,7 @@ class Game(State,Observer):
                 self.__board = []
                 rows = 32
                 columns = 16
+                self.__bombs_count = 99
                 for r in range (0,rows,1):
                     self.__board.append([])
                     for c in range (0,columns,1):
@@ -62,7 +65,7 @@ class Game(State,Observer):
                 targeted_tile.reveal()
 
                 if targeted_tile.tile_state == -2:
-                        return "GameLost"
+                        return True
         
                 for dy in range(-1, 2):
                     for dx in range(-1, 2):
@@ -83,11 +86,13 @@ class Game(State,Observer):
         if self.is_first_click:
             self.place_random_bombs(coordinate)
 
-        self.__reveal_tiles(coordinate)
-        self.check_board()
+        game_lost = self.__reveal_tiles(coordinate)
+        self.check_board(game_lost)
 
-    def check_board(self):
-
+    def check_board(self, game_lost):
+        if game_lost:
+            self.on_mine_explosion()
+            
         check = "GameInProgress"
 
         for x in range(len(self.__board)):
@@ -106,6 +111,9 @@ class Game(State,Observer):
     def on_board_complete(self):
         self._context.set_state("GameWon")
     
+    def on_mine_explosion(self):
+        self._context.set_state("GameLost")
+
     def place_random_bombs(self, coordinate):
         self.is_first_click = False
         y, x = coordinate
