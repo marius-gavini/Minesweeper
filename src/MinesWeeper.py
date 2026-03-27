@@ -1,9 +1,9 @@
-from src.states.State import State
 from src.states.Menu import Menu
 from src.states.Game import Game
 from src.states.GameWon import GameWon
 from src.states.GameLost import GameLost
 from src.Constants import FONT_PATH
+from src.Difficulty import Difficulty
 import pygame 
 
 class MinesWeeper:
@@ -18,7 +18,7 @@ class MinesWeeper:
         self.__clock = pygame.time.Clock()
         self.__fonts = pygame.font.Font(FONT_PATH, 30), pygame.font.Font(FONT_PATH, 50), pygame.font.Font(FONT_PATH, 20)
         
-        self.difficulty = "Medium"
+        self.difficulty = Difficulty.MEDIUM
         self.board = None
 
         self.set_state(state)     
@@ -35,7 +35,7 @@ class MinesWeeper:
     def set_state(self, state: str):
         match state:
             case "Menu":
-                self.__state = Menu()
+                self.__state = Menu(self.difficulty)
             case "Game":
                 self.__state = Game(self.difficulty)
             case "GameWon":

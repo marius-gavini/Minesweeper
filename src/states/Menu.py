@@ -1,21 +1,30 @@
 from src.states.State import State
 from src.components.Button import Button
+from src.Difficulty import Difficulty
 from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display
 
 class Menu(State):
 
-    def __init__(self):
+    def __init__(self, difficulty : Difficulty = Difficulty.MEDIUM):
         self.__background = Surface((1300, 731))
         self.__background.fill(Color("#066895"))
-        self.__difficulties = ["Easy","Medium","Hard"]
-        self.__difficulties_colors = [(50,150,50),(50,50,150),(150,50,50),(100,50,50)]
-        self.__difficulties_hover_colors = [(20,100,20),(20,20,100),(100,20,20),(50,20,20)]
-        self.__difficulty_index = 1
+
+        self.__difficulty = difficulty
+        self.__difficulties_colors = {
+                                        Difficulty.EASY : (50,150,50),
+                                        Difficulty.MEDIUM : (50,50,150),
+                                        Difficulty.HARD: (150,50,50)
+                                     }
+        self.__difficulties_hover_colors = {
+                                        Difficulty.EASY : (20,100,20),
+                                        Difficulty.MEDIUM : (20,20,100),
+                                        Difficulty.HARD: (100,20,20)}
+        
         self.__buttons: list[Button] = [Button("Play",(500,444),(300,60),text = "Play"),
                                         Button("Difficulty",(500,524),(300,60),
-                                                               text = self.__difficulties[self.__difficulty_index],
-                                                               color = self.__difficulties_colors[self.__difficulty_index],
-                                                               hover_color= self.__difficulties_hover_colors[self.__difficulty_index]),
+                                                               text = self.__difficulty.name.capitalize(),
+                                                               color = self.__difficulties_colors[self.__difficulty],
+                                                               hover_color= self.__difficulties_hover_colors[self.__difficulty]),
                                          Button("Quit",(500,604),(300,60),text = "Quit")]
 
     def display(self):
@@ -30,16 +39,17 @@ class Menu(State):
                         if current_event.type == MOUSEBUTTONDOWN:
                             match button.get_target_name():
                                 case "Play":
-                                    self._context.set_state("Game")                             
+                                    self._context.difficulty = self.__difficulty
+                                    self._context.set_state("Game")                       
                                 case "Difficulty":
-                                    self.__difficulty_index += 1
-                                    if self.__difficulty_index > 2:
-                                         self.__difficulty_index = 0
+                                    if self.__difficulty.value < 3:
+                                        self.__difficulty = Difficulty(self.__difficulty.value + 1)
+                                    else:
+                                         self.__difficulty = Difficulty(1)
                                     self.__buttons[1] = Button("Difficulty",(500,524),(300,60),
-                                                               text = self.__difficulties[self.__difficulty_index],
-                                                               color = self.__difficulties_colors[self.__difficulty_index],
-                                                               hover_color= self.__difficulties_hover_colors[self.__difficulty_index])
-                                    self._context.difficulty = self.__difficulties[self.__difficulty_index]
+                                                               text = self.__difficulty.name.capitalize(),
+                                                               color = self.__difficulties_colors[self.__difficulty],
+                                                               hover_color= self.__difficulties_hover_colors[self.__difficulty])
                                 case "Quit":
                                     return False
                         button.hovered()
