@@ -115,15 +115,15 @@ class Game(State,Observer):
             self.on_board_complete()
     
     def on_board_complete(self):
+        self._context.board = self.__board
         self._context.set_state("GameWon")
     
     def on_mine_explosion(self):
         pass
 
     def mine_explosion(self):
-
         self.on_mine_explosion()
-
+        self._context.board = self.__board
         self._context.set_state("GameLost")
 
     def place_random_bombs(self, coordinate):

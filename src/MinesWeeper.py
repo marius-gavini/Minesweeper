@@ -19,6 +19,7 @@ class MinesWeeper:
         self.__fonts = pygame.font.Font(FONT_PATH, 30), pygame.font.Font(FONT_PATH, 50), pygame.font.Font(FONT_PATH, 20)
         
         self.difficulty = "Medium"
+        self.board = None
 
         self.set_state(state)     
 
@@ -38,9 +39,9 @@ class MinesWeeper:
             case "Game":
                 self.__state = Game(self.difficulty)
             case "GameWon":
-                self.__state = GameWon()
+                self.__state = GameWon(self.board)
             case "GameLost":
-                self.__state = GameLost()
+                self.__state = GameLost(self.board)
             case _:
                 self.__state = Menu()
         self.__state.set_context(self)
