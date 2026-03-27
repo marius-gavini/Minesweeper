@@ -102,12 +102,13 @@ class Game(State,Observer):
         for x in range(len(self.__board)):
             for y in range(len(self.__board[x])):
                 
-                if self.__board[x][y].tile_state != -1 or (self.__board[x][y].tile_state == -1 and self.__board[x][y].get_is_mine() == True):
+                if self.__board[x][y].tile_state != -1 or ((self.__board[x][y].tile_state == -1 or self.__board[x][y].tile_state == -3) and self.__board[x][y].get_is_mine() == True):
+                    
                     check = "GameWin"
 
                 else:
-                    check= "GameInProgress"
-                    break
+                    check = "GameInProgress"
+                    return
 
         if check == "GameWin":
             self.on_board_complete()
