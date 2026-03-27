@@ -91,7 +91,7 @@ class Game(State,Observer):
             self.check_board()
 
         elif event.button == 3:
-            if self.__board[x][y].tile_state != -1:
+            if self.__board[x][y].tile_state > -1:
                 return
             else: 
                 self.__board[x][y].switch_tag()
@@ -101,14 +101,14 @@ class Game(State,Observer):
 
         for x in range(len(self.__board)):
             for y in range(len(self.__board[x])):
-                
-                if self.__board[x][y].tile_state != -1 or ((self.__board[x][y].tile_state == -1 or self.__board[x][y].tile_state == -3) and self.__board[x][y].get_is_mine() == True):
-                    
-                    check = "GameWin"
+                if self.__board[x][y].tile_state == -1 or self.__board[x][y].tile_state == -3:
+                    if self.__board[x][y].get_is_mine():
+                        check = "GameWin"
+                        continue
 
-                else:
-                    check = "GameInProgress"
-                    return
+                    else:
+                        check = "GameInProgress"
+                        return
 
         if check == "GameWin":
             self.on_board_complete()
