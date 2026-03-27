@@ -1,7 +1,7 @@
 from src.states.State import State
 from src.interfaces.Observer import Observer
 from src.components.Tile import Tile, Button
-from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display
+from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display,time,font
 from random import randint
 
 class Game(State,Observer):
@@ -15,7 +15,7 @@ class Game(State,Observer):
         self.__background.fill(Color("#5B5B5BFF"))
         self.__buttons: list[Button] = [Button("Reset",(900,250),(300,60),text = "Reset"),
                                         Button("Menu",(900,350),(300,60),text = "Menu")]
-        
+        self.__timer = time.get_ticks()
 
     def __init_board(self):
         match self.__difficulty:
@@ -148,7 +148,10 @@ class Game(State,Observer):
 
     def display(self):
         self._screen.blit(self.__background, (0, 0))
-
+        seconds = str((time.get_ticks() - self.__timer) / 1000)
+        text_surface = self._fonts[1].render(seconds, False, (0, 0, 0))
+        self._screen.blit(text_surface, (800,100))
+        
         for button in self.__buttons:
                 self._draw_button(button)
 
@@ -157,7 +160,6 @@ class Game(State,Observer):
                 self._draw_button(self.__board[x][y])
         
         for current_event in event.get():
-            
             for x in range(len(self.__board)):
                 for y in range(len(self.__board[x])):
                     if self.__board[x][y].rect.collidepoint(mouse.get_pos()):
@@ -167,18 +169,19 @@ class Game(State,Observer):
                         self.__board[x][y].hovered()
                     else:
                         self.__board[x][y].avoided()
-                for button in self.__buttons:
-                    if button.rect.collidepoint(mouse.get_pos()):
-                        if current_event.type == MOUSEBUTTONDOWN:
-                            match button.get_target_name():
-                                case "Reset":
-                                    self._context.set_state("Game")
-                                case "Menu":
-                                    self._context.set_state("Menu")
 
-                        button.hovered()
-                    else:
-                        button.avoided()
+            for button in self.__buttons:
+                if button.rect.collidepoint(mouse.get_pos()):
+                    if current_event.type == MOUSEBUTTONDOWN:
+                        match button.get_target_name():
+                            case "Reset":
+                                self._context.set_state("Game")
+                            case "Menu":
+                                self._context.set_state("Menu")
+
+                    button.hovered()
+                else:
+                    button.avoided()
             if current_event.type == QUIT:
                 return False
         display.update()
