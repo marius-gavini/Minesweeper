@@ -8,7 +8,7 @@ class Game(State,Observer):
 
     def __init__(self, difficulty: str):
         self.__difficulty = difficulty
-        self.is_first_click = True
+        self.__is_first_click = True
         self.__bombs_count = 10
         self.__init_board()
         self.__background = Surface((1300, 731))
@@ -63,7 +63,7 @@ class Game(State,Observer):
                 targeted_tile.reveal()
 
                 if targeted_tile.tile_state == -2:
-                        self.mine_explosion()
+                        self.__mine_explosion()
 
                 
                 for dy in range(-1, 2):
@@ -81,22 +81,22 @@ class Game(State,Observer):
             else: 
                 return 
             
-    def on_click(self, coordinate, event):
+    def __on_click(self, coordinate, event):
         x, y = coordinate
         if event.button == 1 and self.__board[x][y].text == "":
-            if self.is_first_click:
-                self.place_random_bombs(coordinate)
+            if self.__is_first_click:
+                self.__place_random_bombs(coordinate)
 
             self.__reveal_tiles(coordinate)
-            self.check_board()
+            self.__check_board()
 
         elif event.button == 3:
-            if self.__board[x][y].tile_state > -1 or self.is_first_click:
+            if self.__board[x][y].tile_state > -1 or self.__is_first_click:
                 return
             else: 
                 self.__board[x][y].switch_tag()
 
-    def check_board(self):
+    def __check_board(self):
         check = "GameInProgress"
 
         for x in range(len(self.__board)):
@@ -111,22 +111,22 @@ class Game(State,Observer):
                         return
 
         if check == "GameWin":
-            self.on_board_complete()
+            self.__on_board_complete()
     
-    def on_board_complete(self):
+    def __on_board_complete(self):
         self._context.board = self.__board
         self._context.set_state("GameWon")
     
-    def on_mine_explosion(self):
+    def __on___mine_explosion(self):
         pass
 
-    def mine_explosion(self):
-        self.on_mine_explosion()
+    def __mine_explosion(self):
+        self.__on___mine_explosion()
         self._context.board = self.__board
         self._context.set_state("GameLost")
 
-    def place_random_bombs(self, coordinate):
-        self.is_first_click = False
+    def __place_random_bombs(self, coordinate):
+        self.__is_first_click = False
         y, x = coordinate
         i = 0
 
@@ -165,7 +165,7 @@ class Game(State,Observer):
                 for y in range(len(self.__board[x])):
                     if self.__board[x][y].rect.collidepoint(mouse.get_pos()):
                         if current_event.type == MOUSEBUTTONDOWN:
-                            self.on_click((x, y), current_event)
+                            self.__on_click((x, y), current_event)
                             
                         self.__board[x][y].hovered()
                     else:
