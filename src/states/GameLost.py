@@ -9,9 +9,9 @@ class GameLost(State):
         self.__background.fill(Color("#6F0000FF"))
         self.__board = board
         self.__reveal_bombs()
-        self.__buttons: list[Button] = [Button("PlayAgain",(500,444),(300,60),text = "Play again"),
-                                 Button("Menu",(500,524),(300,60),text = "Menu"),
-                                 Button("Quit",(500,604),(300,60),text = "Quit")]
+        self.__buttons: list[Button] = [Button("PlayAgain",(100,630),(300,60),text = "Play again"),
+                                 Button("Menu",(500,630),(300,60),text = "Menu"),
+                                 Button("Quit",(900,630),(300,60),text = "Quit")]
 
     def __reveal_bombs(self):
         for x in range(len(self.__board)):
