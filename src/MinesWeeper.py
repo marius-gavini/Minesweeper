@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 from src.states.State import State
+=======
+from src.states.EnumState import EnumState
+>>>>>>> Stashed changes
 from src.states.Menu import Menu
 from src.states.Game import Game
 from src.states.GameWon import GameWon
@@ -32,18 +36,24 @@ class MinesWeeper:
     def get_fonts(self):
         return self.__fonts
 
-    def set_state(self, state: str):
+    def set_state(self, state: EnumState):
         match state:
+<<<<<<< Updated upstream
             case "Menu":
                 self.__state = Menu()
             case "Game":
+=======
+            case EnumState.MENU:
+                self.__state = Menu(self.difficulty)
+            case EnumState.GAME:
+>>>>>>> Stashed changes
                 self.__state = Game(self.difficulty)
-            case "GameWon":
+            case EnumState.GAMEWON:
                 self.__state = GameWon(self.board)
-            case "GameLost":
+            case EnumState.GAMELOST:
                 self.__state = GameLost(self.board)
             case _:
-                self.__state = Menu()
+                self.__state = Menu(self.difficulty)
         self.__state.set_context(self)
 
     def display(self):

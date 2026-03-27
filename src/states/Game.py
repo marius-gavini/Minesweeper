@@ -1,3 +1,4 @@
+from src.states.EnumState import EnumState
 from src.states.State import State
 from src.interfaces.Observer import Observer
 from src.components.Tile import Tile, Button
@@ -115,7 +116,7 @@ class Game(State,Observer):
     
     def __on_board_complete(self):
         self._context.board = self.__board
-        self._context.set_state("GameWon")
+        self._context.set_state(EnumState.GAMEWON)
     
     def __on___mine_explosion(self):
         pass
@@ -123,7 +124,7 @@ class Game(State,Observer):
     def __mine_explosion(self):
         self.__on___mine_explosion()
         self._context.board = self.__board
-        self._context.set_state("GameLost")
+        self._context.set_state(EnumState.GAMELOST)
 
     def __place_random_bombs(self, coordinate):
         self.__is_first_click = False
@@ -176,9 +177,9 @@ class Game(State,Observer):
                     if current_event.type == MOUSEBUTTONDOWN:
                         match button.get_target_name():
                             case "Reset":
-                                self._context.set_state("Game")
+                                self._context.set_state(EnumState.GAME)
                             case "Menu":
-                                self._context.set_state("Menu")
+                                self._context.set_state(EnumState.MENU)
 
                     button.hovered()
                 else:

@@ -1,3 +1,4 @@
+from src.states.EnumState import EnumState
 from src.states.State import State
 from src.components.Button import Button
 from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display
@@ -30,7 +31,12 @@ class Menu(State):
                         if current_event.type == MOUSEBUTTONDOWN:
                             match button.get_target_name():
                                 case "Play":
+<<<<<<< Updated upstream
                                     self._context.set_state("Game")                             
+=======
+                                    self._context.difficulty = self.__difficulty
+                                    self._context.set_state(EnumState.GAME)                       
+>>>>>>> Stashed changes
                                 case "Difficulty":
                                     self.__difficulty_index += 1
                                     if self.__difficulty_index > 2:

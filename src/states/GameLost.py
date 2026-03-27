@@ -1,3 +1,4 @@
+from src.states.EnumState import EnumState
 from src.states.State import State
 from src.components.Tile import Tile, Button
 from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display
@@ -36,9 +37,9 @@ class GameLost(State):
                     if current_event.type == MOUSEBUTTONDOWN:
                         match button.get_target_name():
                             case "PlayAgain":
-                                self._context.set_state("Game")
+                                self._context.set_state(EnumState.GAME)
                             case "Menu":
-                                self._context.set_state("Menu")
+                                self._context.set_state(EnumState.MENU)
                             case "Quit":
                                 return False
                     button.hovered()
