@@ -91,7 +91,7 @@ class Game(State,Observer):
             self.check_board()
 
         elif event.button == 3:
-            if self.__board[x][y].tile_state > -1:
+            if self.__board[x][y].tile_state > -1 or self.is_first_click:
                 return
             else: 
                 self.__board[x][y].switch_tag()
