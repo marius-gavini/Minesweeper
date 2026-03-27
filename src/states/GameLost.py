@@ -8,9 +8,16 @@ class GameLost(State):
         self.__background = Surface((1300, 731))
         self.__background.fill(Color("#6F0000FF"))
         self.__board = board
+        self.__reveal_bombs()
         self.__buttons: list[Button] = [Button("PlayAgain",(500,444),(300,60),text = "Play again"),
                                  Button("Menu",(500,524),(300,60),text = "Menu"),
                                  Button("Quit",(500,604),(300,60),text = "Quit")]
+
+    def __reveal_bombs(self):
+        for x in range(len(self.__board)):
+            for y in range(len(self.__board[x])):
+                if self.__board[x][y].get_is_mine():
+                    self.__board[x][y].text = "@"
 
     def display(self):
         self._screen.blit(self.__background, (0, 0))
