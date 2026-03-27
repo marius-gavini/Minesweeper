@@ -14,8 +14,8 @@ class Game(State,Observer):
         self.__init_board()
         self.__background = Surface((1300, 731))
         self.__background.fill(Color("#5B5B5BFF"))
-        self.__buttons: list[Button] = [Button("Reset",(900,250),(300,60),text = "Reset"),
-                                        Button("Menu",(900,350),(300,60),text = "Menu")]
+        self.__buttons: list[Button] = [Button("Reset",(100,630),(300,60),text = "Reset"),
+                                        Button("Menu",(900,630),(300,60),text = "Menu")]
         self.__timer = time.get_ticks()
 
     def __init_board(self):
@@ -152,7 +152,7 @@ class Game(State,Observer):
         self._screen.blit(self.__background, (0, 0))
         seconds = str((time.get_ticks() - self.__timer) / 1000)
         text_surface = self._fonts[1].render(seconds, False, (0, 0, 0))
-        self._screen.blit(text_surface, (800,100))
+        self._screen.blit(text_surface, (600,630))
         
         for button in self.__buttons:
                 self._draw_button(button)
