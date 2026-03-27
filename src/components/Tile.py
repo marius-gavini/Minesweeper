@@ -13,7 +13,16 @@ class Tile(Subject, Button):
         self.__observers: list[Observer] = []
         self.__is_mine: bool = is_mine
         self.tile_state: int = -1
+
+        self.__tags = [" ","!","?"]
+        self.__tags_index = 0
     
+    def switch_tag(self):
+        self.__tags_index += 1
+        if self.__tags_index > 2:
+            self.__tags_index = 0
+        self.text = str(self.__tags[self.__tags_index])
+
     def check_tile_value(self, board, coordinate: tuple):
         y, x = coordinate
         targeted_tile: Tile = board[y][x]
