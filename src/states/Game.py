@@ -65,17 +65,18 @@ class Game(State,Observer):
                 targeted_tile.reveal()
 
                 if targeted_tile.tile_state == -2:
-                        return True
-        
+                        self.mine_explosion()
+
+                
                 for dy in range(-1, 2):
                     for dx in range(-1, 2):
                         if targeted_tile.tile_state == 0:
-                                if dy == 0 and dx == 0:
-                                    continue
-                    
-                                ny, nx = y + dy, x + dx
-                                if 0 <= ny < height and 0 <= nx < width:
-                                    self.__reveal_tiles((ny, nx))
+                            if dy == 0 and dx == 0:
+                                continue
+                
+                            ny, nx = y + dy, x + dx
+                            if 0 <= ny < height and 0 <= nx < width:
+                                self.__reveal_tiles((ny, nx))
 
                         else:
                             return
@@ -86,13 +87,10 @@ class Game(State,Observer):
         if self.is_first_click:
             self.place_random_bombs(coordinate)
 
-        game_lost = self.__reveal_tiles(coordinate)
-        self.check_board(game_lost)
+        self.__reveal_tiles(coordinate)
+        self.check_board()
 
-    def check_board(self, game_lost):
-        if game_lost:
-            self.on_mine_explosion()
-            
+    def check_board(self):
         check = "GameInProgress"
 
         for x in range(len(self.__board)):
@@ -112,6 +110,12 @@ class Game(State,Observer):
         self._context.set_state("GameWon")
     
     def on_mine_explosion(self):
+        pass
+
+    def mine_explosion(self):
+
+        self.on_mine_explosion()
+
         self._context.set_state("GameLost")
 
     def place_random_bombs(self, coordinate):
