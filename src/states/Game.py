@@ -13,10 +13,8 @@ class Game(State,Observer):
         self.__init_board()
         self.__background = Surface((1300, 731))
         self.__background.fill(Color("#5B5B5BFF"))
-        self.__buttons: list[Button] = [Button("Reveal",(500,344),(300,60),text = "Reveal 0,1 tile"),
-                                        Button("Win",(500,444),(300,60),text = "Win"),
-                                        Button("Lose",(500,524),(300,60),text = "Lose"),
-                                        Button("Quit",(500,604),(300,60),text = "Quit")]
+        self.__buttons: list[Button] = [Button("Reset",(900,250),(300,60),text = "Reset"),
+                                        Button("Menu",(900,350),(300,60),text = "Menu")]
         
 
     def __init_board(self):
@@ -151,19 +149,36 @@ class Game(State,Observer):
     def display(self):
         self._screen.blit(self.__background, (0, 0))
 
+        for button in self.__buttons:
+                self._draw_button(button)
+
         for x in range(len(self.__board)):
             for y in range(len(self.__board[x])):
                 self._draw_button(self.__board[x][y])
-
+        
         for current_event in event.get():
+            
             for x in range(len(self.__board)):
                 for y in range(len(self.__board[x])):
                     if self.__board[x][y].rect.collidepoint(mouse.get_pos()):
                         if current_event.type == MOUSEBUTTONDOWN:
                             self.on_click((x, y), current_event)
+                            
                         self.__board[x][y].hovered()
                     else:
                         self.__board[x][y].avoided()
+                for button in self.__buttons:
+                    if button.rect.collidepoint(mouse.get_pos()):
+                        if current_event.type == MOUSEBUTTONDOWN:
+                            match button.get_target_name():
+                                case "Reset":
+                                    self._context.set_state("Game")
+                                case "Menu":
+                                    self._context.set_state("Menu")
+
+                        button.hovered()
+                    else:
+                        button.avoided()
             if current_event.type == QUIT:
                 return False
         display.update()
