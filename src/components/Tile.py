@@ -4,9 +4,6 @@ class Tile(Button):
 
     def __init__(self, is_mine: bool, x_index: int, y_index: int, board_coordinate: tuple):
         Button.__init__(self, target_name=f"{x_index}-{y_index}",lefttop=board_coordinate, widthheight=(30,30), color=(83, 84, 84))
-        
-        self.__x_index = x_index
-        self.__y_index = y_index
 
         self.__is_mine: bool = is_mine
         self.tile_state: int = -1
