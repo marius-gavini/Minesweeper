@@ -1,12 +1,11 @@
 from src.states.EnumState import EnumState
 from src.states.State import State
-from src.interfaces.Observer import Observer
 from src.components.Tile import Tile, Button
 from src.Difficulty import Difficulty
 from pygame import Surface,Color,event,mouse,MOUSEBUTTONDOWN,QUIT,display,time,font
 from random import randint
 
-class Game(State,Observer):
+class Game(State):
 
     def __init__(self, difficulty: Difficulty):
         self.__difficulty = difficulty
@@ -72,7 +71,6 @@ class Game(State,Observer):
                 if targeted_tile.tile_state == -2:
                         self.__mine_explosion()
 
-                
                 for dy in range(-1, 2):
                     for dx in range(-1, 2):
                         if targeted_tile.tile_state == 0:
@@ -123,12 +121,8 @@ class Game(State,Observer):
     def __on_board_complete(self):
         self._context.board = self.__board
         self._context.set_state(EnumState.GAMEWON)
-    
-    def __on___mine_explosion(self):
-        pass
 
     def __mine_explosion(self):
-        self.__on___mine_explosion()
         self._context.board = self.__board
         self._context.set_state(EnumState.GAMELOST)
 
@@ -150,9 +144,6 @@ class Game(State,Observer):
             else:   
                 i += 1
                 self.__board[ry][rx].set_is_mine(True)
-
-    def update(self, element = None):
-        pass
 
     def display(self):
         self._screen.blit(self.__background, (0, 0))
