@@ -4,8 +4,8 @@ from src.components.Button import Button
 
 class Tile(Subject, Button):
 
-    def __init__(self, is_mine: bool, x_index: int, y_index: int):
-        Button.__init__(self, target_name=f"{x_index}-{y_index}",lefttop=(262+x_index*32,100+y_index*32), widthheight=(30,30), color=(83, 84, 84))
+    def __init__(self, is_mine: bool, x_index: int, y_index: int, board_coordinate: tuple):
+        Button.__init__(self, target_name=f"{x_index}-{y_index}",lefttop=board_coordinate, widthheight=(30,30), color=(83, 84, 84))
         
         self.__x_index = x_index
         self.__y_index = y_index
@@ -21,6 +21,9 @@ class Tile(Subject, Button):
     def set_tile_color(self):
         if self.tile_state >= 0:
             Button.set_color(self, self.__colors[self.tile_state])
+
+    def set_board_coordinate(self, coordinate_index):
+        Button.lefttop = self.__coordinate[coordinate_index]
 
     def switch_tag(self):
         self.__tags_index += 1

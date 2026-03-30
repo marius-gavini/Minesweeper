@@ -29,7 +29,8 @@ class Game(State,Observer):
                 for r in range (0,rows,1):
                     self.__board.append([])
                     for c in range (0,columns,1):
-                        self.__board[r].append(Tile(False, r, c))
+                        board_coordinate = (500+r*32,150+c*32)
+                        self.__board[r].append(Tile(False, r, c, board_coordinate))
 
             case Difficulty.MEDIUM:
                 self.__board = []
@@ -39,7 +40,9 @@ class Game(State,Observer):
                 for r in range (0,rows,1):
                     self.__board.append([])
                     for c in range (0,columns,1):
-                        self.__board[r].append(Tile(False, r, c))
+                        board_coordinate = (400+r*32,100+c*32)
+                        self.__board[r].append(Tile(False, r, c, board_coordinate))
+
 
             case Difficulty.HARD:
                 self.__board = []
@@ -49,7 +52,8 @@ class Game(State,Observer):
                 for r in range (0,rows,1):
                     self.__board.append([])
                     for c in range (0,columns,1):
-                        self.__board[r].append(Tile(False, r, c))
+                        board_coordinate = (162+r*32,100+c*32)
+                        self.__board[r].append(Tile(False, r, c, board_coordinate))
             case _:
                 print("error")
 
