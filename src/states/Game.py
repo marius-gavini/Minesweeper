@@ -63,6 +63,7 @@ class Game(State,Observer):
             if targeted_tile.tile_state == -1:
                 targeted_tile.check_tile_value(self.__board, (y, x))
                 targeted_tile.reveal()
+                targeted_tile.set_tile_color()
 
                 if targeted_tile.tile_state == -2:
                         self.__mine_explosion()
